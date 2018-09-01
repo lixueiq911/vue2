@@ -13,37 +13,14 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 //新增
-const express = require('express')
-const apiServer = express()
-const bodyParser = require('body-parser');
+const jsonServer = require('json-server')
+const server = jsonServer.create()
+const router = jsonServer.router('db.json')
+const middlewares = jsonServer.defaults()
 
-
-
-
-apiServer.use(bodyParser.urlencoded({extended:true}))
-apiServer.use(bodyParser.json())
-
-var apiRouter = express.Router();
-var fs = require('fs');
-apiRouter.get('/',function(req,res){
-    res.json({message:'hooray! welcome to our api'})
-
-})
-apiRouter.route('/:apiName').all(function(req,res){
-    fs.readFile('./db.json','utf8',function(err,data){
-        if(err) throw errr;
-        var data = JSON.parse(data);
-        if(data[req.params.apiName]){
-            res.json( data[req.params.apiName ])
-        }else{
-            res.send( 'no such api name')
-        }
-
-    })
-
-})
-apiServer.use('/api',apiRouter);//当路由出现/api让路由转换
-apiServer.listen(8081, () => {
+server.use(middlewares)
+server.use('/api',router);//当路由出现/api让路由转换
+server.listen(8081, () => {
   console.log('JSON Server is running')
 })
 //结束

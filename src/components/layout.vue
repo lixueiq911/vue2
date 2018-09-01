@@ -2,14 +2,16 @@
   	<div>
   		<div class="app-head">
   			<div class="app-head-inner">
-  				<img src="../assets/logo.png" alt="" />	
+  				<router-link :to='{path:"/"}'>
+  					<img src="../assets/logo.png" alt="" />	
+  				</router-link>
   				<div class="head-nav">
   					<ul class="nav-list">
-  						<li> 登录</li>
+  						<li @click='changeDialog("loginShow")'> 登录</li>
   						<li class="nav-pile">|</li>
-  						<li>注册</li>
+  						<li @click='changeDialog("regShow")'>注册</li>
   						<li class="nav-pile">|</li>
-  						<li>关于</li>
+  						<li @click='changeDialog("aboutShow")'>关于</li>
   					</ul>
   				</div>
   				
@@ -18,7 +20,7 @@
   		</div>
   		<div class="app-content">
   			<keep-alive>
-  					<router-view></router-view>
+  				<router-view></router-view>
   			</keep-alive>
   			
   			
@@ -27,22 +29,59 @@
   			© 2018 千寻网络
   			
   		</div>
-  		
+  		<my-dialog  :is-show='loginShow' @on-close='closeDialog("loginShow")'>
+  			<log-form></log-form>
+  		</my-dialog>
+  		<my-dialog  :is-show='regShow' @on-close='closeDialog("regShow")'>
+  			<reg-form></reg-form>
+  		</my-dialog>
+  		<my-dialog  :is-show='aboutShow' @on-close='closeDialog("aboutShow")'>
+  			<p> about 淘宝网是亚太地区较大的网络零售、商圈，由阿里巴巴集团在2003年5月创立。
+  				淘宝网是中国深受欢迎的网购零售平台，拥有近5亿的注册用户数，每天有超过6000万的固定访客，
+  				同时每天的在线商品数已经超过了8亿件，平均每分钟售出4.8万件商品 </p>
+  		</my-dialog>
   	</div>
 </template>
 
 <script>
+	import dialog from './dialog'
+	import logForm from './logForm'
+	import regForm from './regForm'
+	
 export default {
-  
+  components:{
+  	myDialog:dialog,
+  	logForm,
+  	regForm
+  },
   data () {
     return {
-      msg: 'i am a price',
-      price:5
+      loginShow:false,
+      regShow:false,
+      aboutShow:false
     }
   },
   methods:{
-  	
-  	
+  	changeDialog(attr){
+  		//console.log( this.isShowDialog )
+  		this[attr] = true;
+  	},
+//	changeLoginDialog(){
+//		//console.log( this.isShowDialog )
+//		this.loginShow = true;
+//	},
+//	changeRegDialog(){
+//		//console.log( this.isShowDialog )
+//		this.regShow = true;
+//	},
+//	changeAboutDialog(){
+//		//console.log( this.isShowDialog )
+//		this.aboutShow = true;
+//	},
+  	closeDialog(attr){
+  		
+  		this[attr] = false;
+  	}
   	
   }
 }

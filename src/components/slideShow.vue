@@ -2,7 +2,7 @@
 	
 	<div class="slide-show" @mouseenter="clearInv()" @mouseleave="runInv()">
 		<div class="slide-img">
-		   <a href="slides[nowIndex].href">
+		   <a :href="slides[nowIndex].href">
 		   	<transition name='slide-trans'>
 		   		<img v-if='isShow' :src="slides[nowIndex].src" alt="" />
 		   	</transition>
@@ -32,6 +32,7 @@
 
 <script>
 	export default {
+		//父子组件通信，需在子组建中创建属性，否则子组建不能接受到信息
 		props:{
 			slides:{
 				type:Array,
@@ -50,6 +51,7 @@
 			}
 		},
 		computed:{
+			//上一张
 			prev(){
 				if( this.nowIndex === 0){
 					return this.slides.length -1;
@@ -58,6 +60,7 @@
 				}
 				
 			},
+			//下一张
 			next(){
 				
 				if( this.nowIndex === this.slides.length -1){
@@ -69,16 +72,19 @@
 			
 		},
 		methods:{
+			//轮播
 			goto(index){
 				this.isShow=false;
 				
 				setTimeout(()=>{
 					this.isShow=true;
 					this.nowIndex = index;
+					this.$emit('onchange',index );//触发父组建 的onchange事件,只能在再调用的组建上除非也就是<slide-show>组建上触发
 					
 				},10)
 				
 			},
+			//自动轮播
 			runInv(){
 				
 				this.invId = setInterval(()=>{
@@ -86,6 +92,7 @@
 				},this.inv)
 				
 			},
+			//清除定时器
 			clearInv(){
 				clearInterval( this.invId );
 				

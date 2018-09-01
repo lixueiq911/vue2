@@ -28,7 +28,7 @@
   			</div>
   		</div>
   		<div class="index-right">
-  			<slide-show :slides='slides' :inv='invTime'></slide-show>
+  			<slide-show :slides='slides' :inv='invTime' @onchange='parentDoSomething'></slide-show>
   			<div class="index-board-list">
   				<div class="index-board-item" 
   					v-for='(item,index) in boardList' 
@@ -39,7 +39,7 @@
   						<div class="index-board-button">
   							<router-link 
   								class='button' 
-  								:to='{path:"detail" }'> 立即购买
+  								:to='{path:"./detail/"+item.toKey }'> 立即购买
   							</router-link>
   						</div>
   						
@@ -59,11 +59,12 @@ export default {
 		slideShow
 	},
   created:function(){
-		this.$http.post('../json/data.json',{username:123}).then(function(data){
-			console.log( data);
-		},function(err){ 
-			
-			console.log( err);
+		this.$http.post('/api/newsList').then((data)=>{
+		
+			this.newsList = JSON.parse( data.bodyText  );
+		},(err)=>{
+			console.log( err );
+		
 		})
 	},
   data () {
@@ -93,7 +94,8 @@ export default {
           description: '开放产品是一款开放产品',
           id: 'car',
           toKey: 'analysis',
-          saleout: false
+					saleout: false
+					
         },
         {
           title: '品牌营销',
@@ -117,46 +119,27 @@ export default {
           saleout: false
         }
       ],
-    	newsList:[
-      			{
-      				name:'数据统计',
-      				url:'http://starcraft.com'
-      			},
-      			{
-      				name:'数据预测',
-      				url:'http://warcraft.com'
-      			},
-      			{
-      				name:'流量分析',
-      				url:'http://overwatch.com',
-      				hot:true
-      			},
-      			{
-      				name:'广告发布',
-      				url:'http://hearstone.com'
-      			}
-      		
-      		],
+    	newsList:[],
       productList:{
       	pc:{
       		title:'PC产品',
       		list:[
       			{
       				name:'数据统计',
-      				url:'http://starcraft.com'
+      				url:'http://pingyouclub.com'
       			},
       			{
       				name:'数据预测',
-      				url:'http://warcraft.com'
+      				url:'http://pingyouclub.com'
       			},
       			{
       				name:'流量分析',
-      				url:'http://overwatch.com',
+      				url:'http://pingyouclub.com',
       				hot:true
       			},
       			{
       				name:'广告发布',
-      				url:'http://hearstone.com'
+      				url:'http://pingyouclub.com'
       			}
       		
       		]
@@ -165,22 +148,22 @@ export default {
       		title:'手机运用类',
       		list:[
       			{
-      				name:'数据统计',
-      				url:'http://starcraft.com'
+      				name:'vue',
+      				url:'http://pingyouclub.com'
       			},
       			{
-      				name:'数据预测',
-      				url:'http://warcraft.com'
+      				name:'react',
+      				url:'http://pingyouclub.com'
       			},
       			{
-      				name:'流量分析',
-      				url:'http://overwatch.com',
+      				name:'angular',
+      				url:'http://pingyouclub.com',
       				hot:true
       			},
       			{
-      				name:'广告发布',
-      				url:'http://hearstone.com'
-      			},
+      				name:'node',
+      				url:'http://pingyouclub.com'
+      			}
       		
       		]
       	}
@@ -188,7 +171,10 @@ export default {
     }
   },
   methods:{
-  	
+  	parentDoSomething(index){
+  		//this.app.title = 'parentDoSomething'+index;
+  			
+  	}
   	
   	
   }
