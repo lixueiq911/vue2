@@ -56,8 +56,8 @@
 <script>
 import VSelection from '../components/base/selection'
 import DatePicker from 'vue-md-date-picker'
-
 import _ from 'lodash'
+
 export default {
   components: {
     VSelection,
@@ -72,6 +72,11 @@ export default {
           startShow:false,
           endShow:false,
           productId:0,
+          currentOrder:'desc',
+          total:0,
+          pageSize:10,
+          offset:0,
+          
           productLists: [
             {
                 label: '数据统计',
@@ -129,14 +134,25 @@ export default {
                 active:false
             }
         ],
-        tableData:[]
+        
+       
+      }
+  },
+  computed:{
+      tableData(){
+          console.log( this.$store.getters.getOrderList )
+          return this.$store.getters.getOrderList;
       }
   },
   methods:{
 
       selectChange(val){
-          this.productId = val;
-          this.getTableData()
+          this.$store.commit('updateParams',{
+              key:productId,
+              val:val
+          });
+         this.$store.dispatch('fetchOrderList');
+          
       },
       startDateFocus(){
           this.startShow = true
@@ -145,23 +161,23 @@ export default {
           this.endShow = true
           
       },
-      getTableData(){
-          let params ={
-              query:this.query,
-              productId:this.productId,
-              startDate:this.startDate,
-              endDate:this.endDate
-          }
-          console.log(params )
-          this.$http.post('/api/getOrderList',params).then((data)=>{
-             this.tableData = JSON.parse(data.bodyText).list;
-             console.log(this.tableData);
-          },(err)=>{
-             console.log(err);
-          })
+    //   getTableData(){
+    //       let params ={
+    //           query:this.query,
+    //           productId:this.productId,
+    //           startDate:this.startDate,
+    //           endDate:this.endDate
+    //       }
+    //       console.log(params )
+    //       this.$http.post('/api/getOrderList',params).then((data)=>{
+    //          this.tableData = JSON.parse(data.bodyText).list;
+    //          console.log(this.tableData);
+    //       },(err)=>{
+    //          console.log(err);
+    //       })
 
 
-      },
+    //   },
       headChecked(item){
           
           this.tableHeads.forEach((e)=>{
@@ -169,23 +185,47 @@ export default {
 
           });
           item.active = true;
-          
+          if( this.currentOrder == 'asc'){
+                this.currentOrder = 'desc'
+          }else{
+              this.currentOrder = 'asc'
+          }
+         let sortData =  _.orderBy(this.tableData,item.key,this.currentOrder );
+          //orderBy(数组,以)
+          this.$store.commit('updateOrderList',sortData);
       }
   },
   watch:{
       query:function(){
-           this.getTableData()
+           
+          this.$store.commit('updateParams',{
+              key:'query',
+              val:this.query
+          });
+          this.$store.dispatch('fetchOrderList');
+          
+     
+           
       },
       startDate(){
-           this.getTableData()
+           this.$store.commit('updateParams',{
+              key:'startDate',
+              val:this.startDate
+          });
+          this.$store.dispatch('fetchOrderList');
       },
       endDate(){
-           this.getTableData()
+           this.$store.commit('updateParams',{
+              key:'endDate',
+              val:this.endDate
+          });
+          this.$store.dispatch('fetchOrderList');
       }
 
   },
   mounted(){
-      this.getTableData()
+      //this.getTableData()
+      this.$store.dispatch('fetchOrderList');
   }
  
 }

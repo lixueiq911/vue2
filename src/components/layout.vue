@@ -1,5 +1,5 @@
 <template>
-  	<div>
+  	<div @click='eventHub_select_close'>
   		<div class="app-head">
   			<div class="app-head-inner">
   				<router-link :to='{path:"/"}'>
@@ -47,7 +47,7 @@
 	import dialog from './dialog'
 	import logForm from './logForm'
 	import regForm from './regForm'
-	
+	import { eventHub } from '../eventHub'
 export default {
   components:{
   	myDialog:dialog,
@@ -81,7 +81,11 @@ export default {
   	closeDialog(attr){
   		
   		this[attr] = false;
-  	}
+    },
+    eventHub_select_close(){
+     
+      eventHub.$emit('eventHub_select_toClose');
+    }
   	
   }
 }

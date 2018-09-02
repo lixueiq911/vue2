@@ -12,7 +12,7 @@ import detailForecastPage from './pages/detail/forecast'
 import detailAnalysisPage from './pages/detail/analysis'
 import detailPublistPage from './pages/detail/publist'
 import orderListPage from './pages/orderListPage'
-
+import store from './store/index.js'
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -62,6 +62,7 @@ let router = new VueRouter({
 new Vue({
   el: '#app',
   router,
+  store,
   components: { layout },
   template: '<layout/>'
 })

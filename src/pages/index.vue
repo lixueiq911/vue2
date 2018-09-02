@@ -22,7 +22,7 @@
   				<h2>最新消息</h2>
   				<ul>
   					<li v-for='item in newsList'> 
-  						<a :href="item.url">{{ item.name }}</a>
+  						<a :href="item.url">{{ item.title }}</a>
   					</li>
   				</ul>
   			</div>
@@ -59,9 +59,10 @@ export default {
 		slideShow
 	},
   created:function(){
-		this.$http.post('/api/newsList').then((data)=>{
+		this.$http.post('/api/getNewsList').then((data)=>{
+			
+			this.newsList = JSON.parse(data.bodyText);
 		
-			this.newsList = JSON.parse( data.bodyText  );
 		},(err)=>{
 			console.log( err );
 		

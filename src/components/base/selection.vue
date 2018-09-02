@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import {eventHub}  from '../../eventHub'
 	export default {
 		props:{
 			selections:{
@@ -33,8 +34,8 @@
 			}
 		},
 		methods:{
-			toggleDrop(){
-				
+			toggleDrop(event){
+				 event.stopPropagation();
 				this.isDrop = !this.isDrop;
 			},
 			changeSelect(index){
@@ -42,8 +43,15 @@
 				this.nowIndex = index;
 				this.$emit('on-change',index)
 				
-			}
-		}
+      }
+    },
+    mounted(){
+      eventHub.$on('eventHub_select_toClose',(event)=>{
+       
+        this.isDrop =false;
+       
+      })
+    }
 	}
 </script>
 

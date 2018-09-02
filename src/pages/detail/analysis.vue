@@ -124,6 +124,7 @@ export default {
   data () {
     return {
       addDefault:1,
+      price:500,
       productTypes:[
       	{
           label:'入门',
